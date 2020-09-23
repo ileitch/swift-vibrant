@@ -6,8 +6,11 @@
 //  Copyright © 2020 Bryce Dougherty. All rights reserved.
 //
 
-
+#if os(OSX)
+import AppKit
+#else
 import UIKit
+#endif
 
 public typealias Callback<T> = (T)->Void
 

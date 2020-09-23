@@ -6,8 +6,13 @@
 //  Copyright © 2020 Bryce Dougherty. All rights reserved.
 //
 
-import Foundation
+#if os(OSX)
+import AppKit
+public typealias UIImage = NSImage
+public typealias UIColor = NSColor
+#else
 import UIKit
+#endif
 
 public class Vibrant {
     

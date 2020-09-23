@@ -7,8 +7,12 @@
 //
 
 import Foundation
-import UIKit
 
+#if os(OSX)
+import AppKit
+#else
+import UIKit
+#endif
 
 struct DELTAE94_DIFF_STATUS {
     static let NA:Int = 0

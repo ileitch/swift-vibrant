@@ -6,7 +6,11 @@
 //  Copyright © 2020 Bryce Dougherty. All rights reserved.
 //
 
+#if os(OSX)
+import AppKit
+#else
 import UIKit
+#endif
 
 public typealias Vec3<T> = (T, T, T)
 public typealias RGB = (r: UInt8, g: UInt8, b: UInt8)

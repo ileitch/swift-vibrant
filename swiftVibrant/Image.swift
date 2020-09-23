@@ -7,7 +7,12 @@
 //
 
 import Foundation
+
+#if os(OSX)
+import AppKit
+#else
 import UIKit
+#endif
 
 public class Image {
     var image: UIImage
@@ -67,8 +72,13 @@ public class Image {
     
     private static func scaleImage(image: UIImage, by scale: CGFloat)->UIImage {
         if scale == 1 { return image }
-        
+
+        #if os(OSX)
+        let imageRef = image.cgImage(forProposedRect: nil, context: nil, hints: nil)!
+        #else
         let imageRef = image.cgImage!
+        #endif
+
         let width = imageRef.width
         let height = imageRef.height
         
@@ -76,19 +86,29 @@ public class Image {
         
         bounds.width = CGFloat(width) * scale
         bounds.height = CGFloat(height) * scale
-        
+
+        #if os(OSX)
+        let frame = CGRect(origin: .zero, size: bounds)
+        guard let representation = image.bestRepresentation(for: frame, context: nil, hints: nil) else { return image }
+        return NSImage(size: bounds, flipped: false, drawingHandler: { (_) -> Bool in
+            return representation.draw(in: frame)
+        })
+        #else
         UIGraphicsBeginImageContext(bounds)
         image.draw(in: CGRect(x: 0, y: 0, width: bounds.width, height: bounds.height))
         let imageCopy = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
-        
         return imageCopy ?? image
+        #endif
     }
     
     private static func makeBytes(from image: UIImage) -> [UInt8]? {
-        guard let cgImage = image.cgImage else {
-            return nil
-        }
+        #if os(OSX)
+        guard let cgImage = image.cgImage(forProposedRect: nil, context: nil, hints: nil) else { return nil }
+        #else
+        guard let cgImage = image.cgImage else { return nil }
+        #endif
+
         if isCompatibleImage(cgImage) {
             return makeBytesFromCompatibleImage(cgImage)
         } else {

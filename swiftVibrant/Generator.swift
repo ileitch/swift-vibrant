@@ -7,8 +7,6 @@
 //  Copyright © 2020 Bryce Dougherty. All rights reserved.
 //
 
-import UIKit
-
 public class Generator {
     
     public typealias generator = (_ swatches: [Swatch])->Palette
